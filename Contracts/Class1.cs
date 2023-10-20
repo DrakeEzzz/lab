@@ -1,19 +1,20 @@
-﻿using static Contracts.Contracts;
+﻿using Contracts;
+using Entities;
+using Entities.Models;
+using static Contracts.Contracts;
+
+
 
 namespace Contracts
 {
     public class Contracts
     {
-        public interface ICompanyRepository
-        {
-            void AnyMethodFromCompanyRepository();
-        }
-        public interface IEmployeeRepository
-        {
-            void AnyMethodFromEmployeeRepository();
-        }
+
 
     }
+
+
+}
     public interface ILoggerManager
     {
         void LogInfo(string message);
@@ -29,4 +30,22 @@ namespace Contracts
         void Save();
     }
 
+
+
+namespace Contracts
+{
+    public interface ICompanyRepository
+    {
+        IEnumerable<Company> GetAllCompanies(bool trackChanges);
+        Company GetCompany(Guid companyId, bool trackChanges);
+    }
+}
+namespace Contracts
+{
+    public interface IEmployeeRepository
+    {
+        object GetEmployee(Guid companyId, Guid id, bool trackChanges);
+        IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges);
+
+    }
 }
