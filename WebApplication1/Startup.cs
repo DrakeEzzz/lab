@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using Entities.DataTransferObjects;
-using Entities.Models;
+﻿using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using NLog;
 using System.Linq.Expressions;
 using WebApplication1.Extensions;
@@ -32,17 +29,10 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-        services.AddAutoMapper(typeof(Startup));
-        services.AddControllers(config => {
-            config.RespectBrowserAcceptHeader = true;
-            config.ReturnHttpNotAcceptable = true;
-        })
-        .AddXmlDataContractSerializerFormatters()
-        .AddCustomCSVFormatter();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILoggerManager logger)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
         {
@@ -50,7 +40,7 @@ public class Startup
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        app.ConfigureExceptionHandler(logger);
+
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseCors("CorsPolicy");
@@ -78,13 +68,22 @@ public class Startup
         void Delete(T entity);
     }
 }
-public class MappingProfile : Profile
+[Route("[controller]")]
+[ApiController]
+public class WeatherForecastController : ControllerBase
 {
-    public MappingProfile()
+    private readonly IRepositoryManager _repository;
+    public WeatherForecastController(IRepositoryManager repository)
     {
-        CreateMap<Company, CompanyDto>().ForMember(c => c.FullAddress,opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
-        CreateMap<Employee, EmployeeDto>();
+        _repository = repository;
+    }
 
+    [HttpGet]
+    public ActionResult<IEnumerable<string>> Get()
+    {
+        _repository.Company.AnyMethodFromCompanyRepository();
+        _repository.Employee.AnyMethodFromEmployeeRepository();
+        return new string[] { "value1", "value2" };
     }
 }
 
