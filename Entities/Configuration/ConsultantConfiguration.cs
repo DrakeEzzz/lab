@@ -18,8 +18,8 @@ namespace Entities.Configuration
             new Consultant
             {
                 Id = new Guid("c9d4c053-49b6-430c-bc78-2d54a9991870"),
-                Name = "Alexet",
-                Address = "Saransk, Pobeby 111",
+                Name = "Andrey",
+                Address = "Saransk, Nevskogo 11",
                 PhoneNumber = "85882507000",
                 Number = "1"
             },
